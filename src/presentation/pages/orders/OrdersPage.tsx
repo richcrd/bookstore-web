@@ -1,14 +1,17 @@
+import { useState } from 'react';
 import { useMyOrders } from '../../../application/orders/useMyOrders';
 import { useAuth } from '../../../application/auth/AuthProvider';
 import { formatDate, formatMoney, shortId } from '../../../shared/lib/identity';
 import { EmptyState } from '../../components/ui/EmptyState';
 import { ErrorBox } from '../../components/ui/ErrorBox';
+import { Pagination } from '../../components/ui/Pagination';
 import { Spinner } from '../../components/ui/Spinner';
 import { StatusBadge } from '../../components/ui/StatusBadge';
 
 export function OrdersPage() {
   const { session } = useAuth();
-  const { data, isPending, isError, error } = useMyOrders(session?.customerId ?? null);
+  const [page, setPage] = useState(1);
+  const { data, isPending, isError, error } = useMyOrders(session?.customerId ?? null, page);
 
   return (
     <div>
@@ -54,6 +57,15 @@ export function OrdersPage() {
             </tbody>
           </table>
         </div>
+      )}
+
+      {data && (
+        <Pagination
+          page={data.page}
+          pageSize={data.pageSize}
+          totalCount={data.totalCount}
+          onChange={setPage}
+        />
       )}
     </div>
   );

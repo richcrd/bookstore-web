@@ -1,26 +1,30 @@
-import { useDeferredValue, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useDeferredValue, useEffect, useState } from 'react';
 import { useBooks } from '../../../application/catalog/useBooks';
-import { useAuth } from '../../../application/auth/AuthProvider';
+import { useCart } from '../../../application/cart/CartContext';
 import { formatMoney } from '../../../shared/lib/identity';
-import { routeBuilder as R } from '../../../app/router/routes';
 import { ErrorBox } from '../../components/ui/ErrorBox';
 import { EmptyState } from '../../components/ui/EmptyState';
+import { Pagination } from '../../components/ui/Pagination';
 import { Spinner } from '../../components/ui/Spinner';
 
 export function HomePage() {
-  const { isAuthenticated, login } = useAuth();
-  const navigate = useNavigate();
   const [search, setSearch] = useState('');
   const deferredSearch = useDeferredValue(search);
-  const { data, isPending, isError, error } = useBooks(deferredSearch);
+  const [page, setPage] = useState(1);
+  const [addedId, setAddedId] = useState<string | null>(null);
+  const { add } = useCart();
+  const { data, isPending, isError, error } = useBooks(deferredSearch, page);
 
-  const goToOrder = (bookId: string) => {
-    if (isAuthenticated) {
-      navigate(R.newOrderWithBook(bookId));
-    } else {
-      void login();
-    }
+  useEffect(() => {
+    setPage(1);
+  }, [deferredSearch]);
+
+  const handleAdd = (bookId: string) => {
+    const book = data?.items.find((item) => item.id === bookId);
+    if (!book) return;
+    add(book);
+    setAddedId(bookId);
+    window.setTimeout(() => setAddedId((current) => (current === bookId ? null : current)), 1200);
   };
 
   return (
@@ -54,15 +58,28 @@ export function HomePage() {
             <div className="mt-auto flex items-center justify-between pt-4">
               <span className="text-lg font-semibold text-indigo-700">{formatMoney(book.price, book.currency)}</span>
               <button
-                onClick={() => goToOrder(book.id)}
-                className="rounded bg-indigo-600 px-3 py-1.5 text-sm text-white transition-colors hover:bg-indigo-500"
+                onClick={() => handleAdd(book.id)}
+                className={`rounded px-3 py-1.5 text-sm transition-colors ${
+                  addedId === book.id
+                    ? 'bg-green-600 text-white hover:bg-green-500'
+                    : 'bg-indigo-600 text-white hover:bg-indigo-500'
+                }`}
               >
-                Pedir
+                {addedId === book.id ? 'Añadido ✓' : 'Añadir al carrito'}
               </button>
             </div>
           </div>
         ))}
       </div>
+
+      {data && (
+        <Pagination
+          page={data.page}
+          pageSize={data.pageSize}
+          totalCount={data.totalCount}
+          onChange={setPage}
+        />
+      )}
     </div>
   );
 }

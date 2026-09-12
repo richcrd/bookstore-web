@@ -5,6 +5,6 @@ export const routeBuilder = {
   callback: ROUTES.callback,
   orders: ROUTES.orders,
   newOrder: ROUTES.newOrder,
-  newOrderWithBook: (bookId: string) => `${ROUTES.newOrder}?book=${bookId}`,
+  cart: ROUTES.cart,
   stock: ROUTES.stock,
 };

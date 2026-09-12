@@ -61,6 +61,19 @@ export interface Page<T> {
   pageSize: number;
 }
 
+export interface CartItem {
+  bookId: string;
+  title: string;
+  author: string;
+  unitPrice: number;
+  currency: string;
+  quantity: number;
+}
+
+export interface Cart {
+  items: CartItem[];
+}
+
 export interface SessionUser {
   sub: string;
   name: string;

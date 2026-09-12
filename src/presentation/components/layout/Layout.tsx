@@ -1,5 +1,6 @@
 import { Link, NavLink } from 'react-router-dom';
 import { useAuth } from '../../../application/auth/AuthProvider';
+import { useCart } from '../../../application/cart/CartContext';
 import { ROUTES } from '../../../shared/constants';
 
 const navLinkClass = ({ isActive }: { isActive: boolean }) =>
@@ -7,6 +8,7 @@ const navLinkClass = ({ isActive }: { isActive: boolean }) =>
 
 export function Layout({ children }: { children: React.ReactNode }) {
   const { isAuthenticated, session, login, logout } = useAuth();
+  const { count } = useCart();
   const isAdmin = session?.roles.includes('admin') ?? false;
 
   return (
@@ -19,8 +21,10 @@ export function Layout({ children }: { children: React.ReactNode }) {
             </Link>
             <nav className="flex items-center gap-4 text-sm">
               <NavLink to={ROUTES.home} className={navLinkClass} end>Catálogo</NavLink>
+              <NavLink to={ROUTES.cart} className={navLinkClass}>
+                Carrito{count > 0 ? ` (${count})` : ''}
+              </NavLink>
               <NavLink to={ROUTES.orders} className={navLinkClass}>Mis pedidos</NavLink>
-              <NavLink to={ROUTES.newOrder} className={navLinkClass}>Nuevo pedido</NavLink>
               {isAdmin && <NavLink to={ROUTES.stock} className={navLinkClass}>Stock</NavLink>}
             </nav>
           </div>

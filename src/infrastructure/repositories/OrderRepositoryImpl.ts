@@ -4,9 +4,9 @@ import { httpClient } from "../http/httpClient";
 import { orderSchema, pageSchema } from "../schemas";
 
 export const orderRepository: OrdersPort = {
-  async getOrders(customerId: string) {
+  async getOrders(customerId: string, page = 1, pageSize = 10) {
     const { data } = await httpClient.get("/api/v1/orders", {
-      params: { customerId, page: 1, pageSize: 50 },
+      params: { customerId, page, pageSize },
     });
     return pageSchema(orderSchema).parse(data);
   },
