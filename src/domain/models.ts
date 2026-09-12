@@ -21,11 +21,9 @@ export interface OrderItem {
 
 export type OrderStatus =
   | 'Pending'
-  | 'AwaitingPayment'
-  | 'PaymentApproved'
-  | 'ShipmentRequested'
+  | 'Paid'
   | 'Shipped'
-  | 'Completed'
+  | 'Delivered'
   | 'Cancelled';
 
 export interface Order {

@@ -11,6 +11,11 @@ export const orderRepository: OrdersPort = {
     return pageSchema(orderSchema).parse(data);
   },
 
+  async getOrder(id: string) {
+    const { data } = await httpClient.get(`/api/v1/orders/${id}`);
+    return orderSchema.parse(data);
+  },
+
   async createOrder(input: CreateOrderItems) {
     const { data } = await httpClient.post("/api/v1/orders", input, {
       headers: { "Idempotency-Key": crypto.randomUUID() },

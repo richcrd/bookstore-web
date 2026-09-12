@@ -6,6 +6,7 @@ export interface CatalogPort {
 
 export interface OrdersPort {
   getOrders(customerId: string, page?: number, pageSize?: number): Promise<Page<Order>>;
+  getOrder(id: string): Promise<Order>;
   createOrder(input: CreateOrderItems): Promise<Order>;
 }
 

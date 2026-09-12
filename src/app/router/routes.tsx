@@ -7,4 +7,5 @@ export const routeBuilder = {
   newOrder: ROUTES.newOrder,
   cart: ROUTES.cart,
   stock: ROUTES.stock,
+  orderDetail: (id: string) => `/orders/${id}`,
 };

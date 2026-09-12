@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useMyOrders } from '../../../application/orders/useMyOrders';
 import { useAuth } from '../../../application/auth/AuthProvider';
 import { formatDate, formatMoney, shortId } from '../../../shared/lib/identity';
@@ -17,7 +18,8 @@ export function OrdersPage() {
     <div>
       <h1 className="text-2xl font-semibold">Mis pedidos</h1>
       <p className="mb-6 text-sm text-slate-500">
-        Pedidos del cliente {session ? shortId(session.customerId) : '—'} · la saga los va de Pending a Shipped.
+        Pedidos del cliente {session ? shortId(session.customerId) : '—'} · la saga los va de Pendiente a
+        Enviado. Haz clic en un pedido para ver el seguimiento en vivo.
       </p>
 
       {isPending && <Spinner label="Cargando pedidos…" />}
@@ -40,8 +42,12 @@ export function OrdersPage() {
             </thead>
             <tbody className="divide-y divide-slate-100">
               {data.items.map((order) => (
-                <tr key={order.id}>
-                  <td className="px-4 py-3 font-mono">{shortId(order.id)}</td>
+                <tr key={order.id} className="hover:bg-slate-50">
+                  <td className="px-4 py-3 font-mono">
+                    <Link to={`/orders/${order.id}`} className="text-blue-600 hover:underline">
+                      {shortId(order.id)}
+                    </Link>
+                  </td>
                   <td className="px-4 py-3 text-slate-600">{formatDate(order.createdAt)}</td>
                   <td className="px-4 py-3">
                     <ul className="space-y-0.5 text-slate-600">

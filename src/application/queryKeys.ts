@@ -5,6 +5,7 @@ export const queryKeys = {
   },
   orders: {
     all: ['orders'] as const,
+    byId: (id: string) => ['orders', id] as const,
     forCustomer: (customerId: string, page: number) => ['orders', customerId, page] as const,
   },
   stock: {
